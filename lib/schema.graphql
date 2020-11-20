@@ -1,9 +1,23 @@
+enum Level {
+  beginner
+  intermediate
+  advance
+}
+
 type Course {
   _id: ID!
   title: String!
   teacher: String
   description: String!
   topic: String
+  people: [Student]
+  level: Level
+}
+
+type Student {
+  _id: ID!
+  name: String!
+  email: String!
 }
 
 type Query {
@@ -11,4 +25,51 @@ type Query {
   getCourses: [Course]
   "List course by id"
   getCourse(id: ID!): Course
+  "List student"
+  getStudents: [Student]
+  "List course by id"
+  getStudent(id: ID!): Student
+}
+
+input CourseInput {
+  title: String!
+  teacher: String
+  description: String!
+  topic: String
+  level: Level
+}
+
+input CourseEditInput {
+  title: String
+  teacher: String
+  description: String
+  topic: String
+  level: Level
+}
+
+input StudentInput {
+  name: String!
+  email: String!
+}
+
+input StudentEditInput {
+  name: String
+  email: String
+}
+
+type Mutation {
+  "Create a course"
+  createCourse(input: CourseInput!): Course
+  "Edit course"
+  editCourse(id: ID!, input: CourseEditInput!): Course
+  "Delete course"
+  deleteCourse(id: ID!): Course
+  "Create a student"
+  createStudent(input: StudentInput!): Student
+  "Edit student"
+  editStudent(id: ID!, input: StudentEditInput!): Student
+  "Delete student"
+  deleteStudent(id: ID!): Student
+  "Add person to course"
+  addPerson(courseId: ID!, personId: ID!): Course
 }
