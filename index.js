@@ -2,10 +2,14 @@
 
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const { graphqlHTTP } = require("express-graphql");
 const { makeExecutableSchema } = require("graphql-tools");
 const { readFileSync } = require("fs");
 const { join } = require("path");
+
+const isDev = process.env.NODE_ENV !== "production";
+
 const resolvers = require("./lib/resolvers");
 
 const app = express();
@@ -18,12 +22,14 @@ const typeDefs = readFileSync(
 );
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
+app.use(cors());
+
 app.use(
   "/api",
   graphqlHTTP({
     schema: schema,
     rootValue: resolvers,
-    graphiql: true,
+    graphiql: isDev,
   })
 );
 
